@@ -14,7 +14,7 @@ void getFormattedDateTime(char *timeString, size_t size) {
     strftime(timeString, size, "%d/%m/%Y %H:%M", localTime);
 }
 
-//Function to pause the console until Enter is pressed
+//Function to pause the console until 'C' is pressed
 int enterC() {
     printf("Press 'C' to Continue\n");
     while (getchar() != 'C');
