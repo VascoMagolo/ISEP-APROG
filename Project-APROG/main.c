@@ -9,8 +9,8 @@ int enterC() {
 }
 struct TicketR{
     int ticketID;
-    time_t dateGeneratad;
-    time_t dateCalled;
+    char dateGenerated;
+    char dateCalled;
     int counter;
     char equipment;
     char mainFault;
@@ -18,41 +18,58 @@ struct TicketR{
 };
 struct TicketE{
     int ticketID;
-    time_t dateGeneratad;
-    time_t dateCalled;
+    char dateGenerated;
+    char dateCalled;
     int counter;
     char equipment;
     char condition;
     int price;
 };
-struct TicketR fR(time_t timestamp, int idRc){
+struct TicketR fR(char timestamp, int idRc){
     struct TicketR ticket;
     ticket.ticketID = idRc;
-    ticket.dateGeneratad = time(&timestamp);
-    printf("%d",ticket.ticketID);
+    ticket.dateGenerated = timestamp;
+    printf("%time_t",ticket.dateGenerated);
     return ticket;
 }
-struct TicketE fE(time_t timestamp, int idEc){
+struct TicketE fE(char timestamp, int idEc){
     struct TicketE ticket;
     ticket.ticketID = idEc;
-    ticket.dateGeneratad = time(&timestamp);
+    ticket.dateGenerated = timestamp;
     printf("%d",ticket.ticketID);
     return ticket;
 }
+void getFormattedDateTime(char *timeString, size_t size) {
+    time_t currentTime;
+    struct tm *localTime;
 
+    // Get the current time
+    time(&currentTime);
+    localTime = localtime(&currentTime);
+
+    // Format date and time and store in the buffer
+    strftime(timeString, size, "%d/%m/%Y %H:%M", localTime);
+}
 int main() {
-    time_t t;// not a primitive datatype
-    time(&t);
+    // Buffer to store the formatted date and time
+    char timeString[20];
+
+    // Get the formatted date and time string
+    getFormattedDateTime(timeString, sizeof(timeString));
+
+    // Print the formatted date and time
+    printf("Formatted date and time: %s\n", timeString);
+
     int y,idRc=0,idEc=0;
     struct TicketR tickets[100];
     printf("Hello, World!\n");
     scanf("d",&y);
     if(y==0){
-        fR(t,idRc);
+        fR(timeString,idRc);
         idRc++;
     }
     else if (y==1){
-        fE(t,idEc);
+        fE(timeString,idEc);
         idEc++;
     }
 
