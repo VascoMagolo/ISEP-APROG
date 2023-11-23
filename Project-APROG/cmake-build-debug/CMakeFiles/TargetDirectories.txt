@@ -1,0 +1,3 @@
+C:/Users/Vasco/Documents/GitHub/ISEP-APROG/Project-APROG/cmake-build-debug/CMakeFiles/ISEP_APROG.dir
+C:/Users/Vasco/Documents/GitHub/ISEP-APROG/Project-APROG/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/Vasco/Documents/GitHub/ISEP-APROG/Project-APROG/cmake-build-debug/CMakeFiles/rebuild_cache.dir
