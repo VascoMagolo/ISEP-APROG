@@ -22,7 +22,7 @@ int encontrarmaior(int n, int *v){
             maior = i;
         }
     }
-    return maior; 
+    return maior;
 }
 
 int main() {
