@@ -86,41 +86,70 @@ int main() {
             printf("Exiting the program.\n");
             break; // Exit the loop
         }
+        int choice; // Variable to store the user choice
+        // Prompt the user to enter a number
+        printf("Menu:\n");
+        printf("1. Create a ticket\n");
+        printf("2. Search for a ticket\n");
+        printf("3. Edit a ticket\n");
+        printf("4. Delete a ticket\n");
+        printf("5. Display all tickets\n");
+        scanf("%d", &choice); // Read the user choice
+        switch (choice) {
+            case 1:
+                printf("Create a ticket\n");
 
-        // Buffer to store the formatted date and time
-        char timeString[20]; // 20 bytes should be enough
-        // Get the formatted date and time string
-        getFormattedDateTime(timeString, sizeof(timeString) / sizeof(timeString[0]));//passing the string and the array size
 
-        // Print the formatted date and time delete this line later
-        printf("Formatted date and time: %s\n", timeString);
+                // Buffer to store the formatted date and time
+                char timeString[20]; // 20 bytes should be enough
+                // Get the formatted date and time string
+                getFormattedDateTime(timeString, sizeof(timeString) / sizeof(timeString[0]));//passing the string and the array size
 
-        // Declaring variables for the choice of the ticket and the ticket ID
-        int t, idRc = 0, idEc = 0;
+                // Print the formatted date and time delete this line later
+                printf("Formatted date and time: %s\n", timeString);
 
-        // Asking the user which ticket he wants to create and storing the choice in the variable t
-        printf("Which ticket do you want?(0-R,1-E)\n");
-        scanf("%d", &t);
+                // Declaring variables for the choice of the ticket and the ticket ID
+                int t, idRc = 0, idEc = 0;
 
-        //Just a break to make the console look better
-        enterC();
+                // Asking the user which ticket he wants to create and storing the choice in the variable t
+                printf("Which ticket do you want?(0-R,1-E)\n");
+                scanf("%d", &t);
 
-        //Knowing which ticket the user choose and after creating it, adding it to the array
-        if (t == 0) {
-            addtoarrR(timeString, idRc, idRc);
-            idRc++;
-        } else if (t == 1) {
-            addtoarrE(timeString, idEc, idEc);
-            idEc++;
-        } else {
-            printf("Invalid Option\n");
+                //Just a break to make the console look better
+                enterC();
+
+                //Knowing which ticket the user choose and after creating it, adding it to the array
+                if (t == 0) {
+                    addtoarrR(timeString, idRc, idRc);
+                    idRc++;
+                } else if (t == 1) {
+                    addtoarrE(timeString, idEc, idEc);
+                    idEc++;
+                } else {
+                    printf("Invalid Option\n");
+                }
+
+                //printing the first element of the array for testing
+                printf("%d", ticketsR[0].ticketID);
+                printf("%s", ticketsR[0].dateGenerated);
+                printf("%d", ticketsE[0].ticketID);
+                enterC(); //Just a break to make the console look better
+                break;
+            case 2:
+                printf("Search for a ticket\n");
+                break;
+            case 3:
+                printf("Edit a ticket\n");
+                break;
+            case 4:
+                printf("Delete a ticket\n");
+                break;
+            case 5:
+                printf("Display all tickets\n");
+                break;
+            default:
+                printf("Invalid option\n");
         }
-
-        //printing the first element of the array for testing
-        printf("%d", ticketsR[0].ticketID);
-        printf("%s", ticketsR[0].dateGenerated);
-        printf("%d", ticketsE[0].ticketID);
-        enterC();
     }
     return 0;
 }   // Path: main.c
