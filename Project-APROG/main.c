@@ -98,8 +98,7 @@ int main() {
         switch (choice) {
             case 1:
                 printf("Create a ticket\n");
-
-
+                
                 // Buffer to store the formatted date and time
                 char timeString[20]; // 20 bytes should be enough
                 // Get the formatted date and time string
