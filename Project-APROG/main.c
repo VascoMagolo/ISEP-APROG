@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <time.h>
-
+#include <string.h>
 // Function to get the formatted date and time string
 void getFormattedDateTime(char *timeString, size_t size) {
     time_t currentTime;
@@ -24,6 +24,7 @@ int enterC() {
 // Structs Begin
 struct TicketR {
     int ticketID;
+    int ticektnumberA;
     char dateGenerated[20];
     char dateCalled[20];
     int counter;
@@ -33,6 +34,7 @@ struct TicketR {
 };
 struct TicketE {
     int ticketID;
+    int ticektnumberA;
     char dateGenerated[20];
     char dateCalled[20];
     int counter;
@@ -43,16 +45,18 @@ struct TicketE {
 // Structs End
 
 // Structs Functions Begin
-struct TicketR fR(char *timestamp, int idRc) {
+struct TicketR fR(char *timestamp, int idRc, int atendnum) {
     struct TicketR ticket;
     ticket.ticketID = idRc;
+    ticket.ticektnumberA = atendnum;
     strcpy(ticket.dateGenerated, timestamp);
     printf("%s", ticket.dateGenerated);
     return ticket;
 }
-struct TicketE fE(char *timestamp, int idEc) {
+struct TicketE fE(char *timestamp, int idEc, int atendnum) {
     struct TicketE ticket;
     ticket.ticketID = idEc;
+    ticket.ticektnumberA = atendnum;
     strcpy(ticket.dateGenerated, timestamp);
     printf("%d", ticket.ticketID);
     return ticket;
@@ -64,16 +68,17 @@ struct TicketR ticketsR[100];
 struct TicketE ticketsE[100];
 
 // Functions to add the ticket to the array-BEGIN
-void addtoarrR(char *timeString, int idRc,int counter) {
-    ticketsR[counter] = fR(timeString, idRc);
+void addtoarrR(char *timeString, int idRc,int counter, int atendnum) {
+    ticketsR[counter] = fR(timeString, idRc, atendnum);
 }
-void addtoarrE(char *timeString, int idEc,int counter) {
-    ticketsE[counter] = fE(timeString, idEc);
+void addtoarrE(char *timeString, int idEc,int counter, int atendnum) {
+    ticketsE[counter] = fE(timeString, idEc, atendnum);
 }
 
-//Main function that runs the programm
+//Main function that runs the program
 int main() {
     char userInput; // Variable to store the user input
+    int t, idRc = 0, idEc = 0, atendnum = 0; // Declaring variables for the choice of the ticket and the ticket ID
     while (1) {
         // Prompt the user to enter a character
         printf("Enter a character (type 'P' to exit): ");
@@ -90,7 +95,7 @@ int main() {
         // Prompt the user to enter a number
         printf("Menu:\n");
         printf("1. Create a ticket\n");
-        printf("2. Search for a ticket\n");
+        printf("2. Display all tickets by date\n");
         printf("3. Edit a ticket\n");
         printf("4. Delete a ticket\n");
         printf("5. Display all tickets\n");
@@ -107,9 +112,6 @@ int main() {
                 // Print the formatted date and time delete this line later
                 printf("Formatted date and time: %s\n", timeString);
 
-                // Declaring variables for the choice of the ticket and the ticket ID
-                int t, idRc = 0, idEc = 0;
-
                 // Asking the user which ticket he wants to create and storing the choice in the variable t
                 printf("Which ticket do you want?(0-R,1-E)\n");
                 scanf("%d", &t);
@@ -119,23 +121,29 @@ int main() {
 
                 //Knowing which ticket the user choose and after creating it, adding it to the array
                 if (t == 0) {
-                    addtoarrR(timeString, idRc, idRc);
+                    addtoarrR(timeString, idRc, idRc, atendnum);
+                    atendnum++;
                     idRc++;
                 } else if (t == 1) {
-                    addtoarrE(timeString, idEc, idEc);
+                    addtoarrE(timeString, idEc, idEc, atendnum);
+                    atendnum++;
                     idEc++;
                 } else {
                     printf("Invalid Option\n");
                 }
 
                 //printing the first element of the array for testing
-                printf("%d", ticketsR[0].ticketID);
-                printf("%s", ticketsR[0].dateGenerated);
-                printf("%d", ticketsE[0].ticketID);
+                printf("%d\n", ticketsR[0].ticketID);
+                printf("%s\n", ticketsR[0].dateGenerated);
+                printf("%d\n", ticketsE[0].ticketID);
                 enterC(); //Just a break to make the console look better
                 break;
             case 2:
-                printf("Search for a ticket\n");
+                printf("Display all tickets by date\n");
+                for (int i = 0; i <= atendnum; i++) {
+                    printf("Ticket Number:%d\n", ticketsR[i].ticektnumberA);
+                    printf("Ticket Generated Date%s\n", ticketsR[i].dateGenerated);
+                }
                 break;
             case 3:
                 printf("Edit a ticket\n");
