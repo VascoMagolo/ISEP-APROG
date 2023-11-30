@@ -50,7 +50,6 @@ struct TicketR fR(char *timestamp, int idRc, int atendnum) {
     ticket.ticketID = idRc;
     ticket.ticektnumberA = atendnum;
     strcpy(ticket.dateGenerated, timestamp);
-    printf("%s", ticket.dateGenerated);
     return ticket;
 }
 struct TicketE fE(char *timestamp, int idEc, int atendnum) {
@@ -58,7 +57,6 @@ struct TicketE fE(char *timestamp, int idEc, int atendnum) {
     ticket.ticketID = idEc;
     ticket.ticektnumberA = atendnum;
     strcpy(ticket.dateGenerated, timestamp);
-    printf("%d", ticket.ticketID);
     return ticket;
 }
 // Structs Functions End
@@ -77,86 +75,135 @@ void addtoarrE(char *timeString, int idEc,int counter, int atendnum) {
 
 //Main function that runs the program
 int main() {
-    char userInput; // Variable to store the user input
+    int userInput; // Variable to store the user input
     int t, idRc = 0, idEc = 0, atendnum = 0; // Declaring variables for the choice of the ticket and the ticket ID
-    while (1) {
-        // Prompt the user to enter a character
-        printf("Enter a character (type 'P' to exit): ");
+
+    int leaveProgram = 0; // Variable to control the program flow
+
+    while (!leaveProgram) {
+        // Prompt the user to enter a character to choose the type of user
+        printf("1. Customer\n");
+        printf("2. Employee\n");
+        printf("0. Leave program\n");
 
         // Read the user input
-        scanf(" %c", &userInput);
+        scanf(" %d", &userInput);
 
-        // Check if the user entered 'P'
-        if (userInput == 'P' || userInput == 'p') {
-            printf("Exiting the program.\n");
-            break; // Exit the loop
-        }
-        int choice; // Variable to store the user choice
-        // Prompt the user to enter a number
-        printf("Menu:\n");
-        printf("1. Create a ticket\n");
-        printf("2. Display all tickets by date\n");
-        printf("3. Edit a ticket\n");
-        printf("4. Delete a ticket\n");
-        printf("5. Display all tickets\n");
-        scanf("%d", &choice); // Read the user choice
-        switch (choice) {
+        switch (userInput) {
             case 1:
-                printf("Create a ticket\n");
-                
-                // Buffer to store the formatted date and time
-                char timeString[20]; // 20 bytes should be enough
-                // Get the formatted date and time string
-                getFormattedDateTime(timeString, sizeof(timeString) / sizeof(timeString[0]));//passing the string and the array size
+                printf("Customer Menu:\n");
+                while (1) {
+                    int choice; // Variable to store the user choice
 
-                // Print the formatted date and time delete this line later
-                printf("Formatted date and time: %s\n", timeString);
+                    // Prompt the user to enter a number
+                    printf("Menu:\n");
+                    printf("1. Create a ticket\n");
+                    printf("0. Leave Menu\n");
+                    scanf("%d", &choice); // Read the user choice
 
-                // Asking the user which ticket he wants to create and storing the choice in the variable t
-                printf("Which ticket do you want?(0-R,1-E)\n");
-                scanf("%d", &t);
+                    if (choice == 0) {
+                        break;
+                    }
 
-                //Just a break to make the console look better
-                enterC();
+                    switch (choice) {
+                        case 1:
+                            printf("Create a ticket\n");
 
-                //Knowing which ticket the user choose and after creating it, adding it to the array
-                if (t == 0) {
-                    addtoarrR(timeString, idRc, idRc, atendnum);
-                    atendnum++;
-                    idRc++;
-                } else if (t == 1) {
-                    addtoarrE(timeString, idEc, idEc, atendnum);
-                    atendnum++;
-                    idEc++;
-                } else {
-                    printf("Invalid Option\n");
+                            // Buffer to store the formatted date and time
+                            char timeString[20]; // 20 bytes should be enough
+                            // Get the formatted date and time string
+                            getFormattedDateTime(timeString, sizeof(timeString) / sizeof(timeString[0]));//passing the string and the array size
+
+                            // Asking the user which ticket he wants to create and storing the choice in the variable t
+                            printf("Which ticket do you want?(0-R,1-E)\n");
+                            scanf("%d", &t);
+
+                            // Knowing which ticket the user choose and after creating it, adding it to the array
+                            if (t == 0) {
+                                addtoarrR(timeString, idRc, idRc, atendnum);
+                                atendnum++;
+                                idRc++;
+                            } else if (t == 1) {
+                                addtoarrE(timeString, idEc, idEc, atendnum);
+                                atendnum++;
+                                idEc++;
+                            } else {
+                                printf("Invalid Option\n");
+                            }
+
+                            // printing the first element of the array for testing
+                            printf("%d\n", ticketsR[0].ticketID);
+                            printf("%s\n", ticketsR[0].dateGenerated);
+                            printf("%d\n", ticketsE[0].ticketID);
+                            enterC(); // Just a break to make the console look better
+                            break;
+                        case 0:
+                            // Set the variable to leave the outer loop
+                            leaveProgram = 1;
+                            break;
+                        default:
+                            printf("Invalid option\n");
+                            break;
+                    }
                 }
-
-                //printing the first element of the array for testing
-                printf("%d\n", ticketsR[0].ticketID);
-                printf("%s\n", ticketsR[0].dateGenerated);
-                printf("%d\n", ticketsE[0].ticketID);
-                enterC(); //Just a break to make the console look better
                 break;
+
             case 2:
-                printf("Display all tickets by date\n");
-                for (int i = 0; i <= atendnum; i++) {
-                    printf("Ticket Number:%d\n", ticketsR[i].ticektnumberA);
-                    printf("Ticket Generated Date%s\n", ticketsR[i].dateGenerated);
+                printf("Employee Menu:\n");
+                while (1) {
+                    int choice; // Variable to store the user choice
+                    printf("1. Attend a ticket\n");
+                    printf("2. Display all tickets by date\n");
+                    printf("3. Edit a ticket\n");
+                    printf("4. Delete a ticket\n");
+                    printf("5. Display all tickets\n");
+                    printf("0. Leave Menu\n");
+                    scanf("%d", &choice); // Read the user choice
+
+                    if (choice == 0) {
+                        break;
+                    }
+
+                    switch (choice) {
+                        case 1:
+                            printf("Attend a ticket\n");
+                            break;
+                        case 2:
+                            printf("Display all tickets by date\n");
+                            for (int i = 0; i < atendnum; i++) {
+                                printf("Ticket Number:%d\n", ticketsR[i].ticektnumberA);
+                                printf("Ticket Generated Date%s\n", ticketsR[i].dateGenerated);
+                            }
+                            break;
+                        case 3:
+                            printf("Edit a ticket\n");
+                            break;
+                        case 4:
+                            printf("Delete a ticket\n");
+                            break;
+                        case 5:
+                            printf("Display all tickets\n");
+                            break;
+                        case 0:
+                            // Set the variable to leave the outer loop
+                            leaveProgram = 1;
+                            break;
+                        default:
+                            printf("Invalid option\n");
+                            break;
+                    }
                 }
                 break;
-            case 3:
-                printf("Edit a ticket\n");
-                break;
-            case 4:
-                printf("Delete a ticket\n");
-                break;
-            case 5:
-                printf("Display all tickets\n");
-                break;
+
+            case 0:
+                printf("Leaving program\n");
+                return 0;
+
             default:
                 printf("Invalid option\n");
+                break;
         }
     }
+
     return 0;
-}   // Path: main.c
+} // Path: main.c
