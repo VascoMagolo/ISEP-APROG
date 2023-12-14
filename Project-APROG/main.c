@@ -38,7 +38,7 @@ struct TicketE {
     char dateGenerated[20];
     char dateCalled[20];
     int counter;
-    char equipment;
+    char *equipment;
     char condition;
     int price;
 };
@@ -72,7 +72,33 @@ void addtoarrR(char *timeString, int idRc,int counter, int atendnum) {
 void addtoarrE(char *timeString, int idEc,int counter, int atendnum) {
     ticketsE[counter] = fE(timeString, idEc, atendnum);
 }
+void attendE(struct TicketE *ticket, int counter, char *timeString) {
+    ticket->counter = counter;
 
+    printf("What is the equipment?");
+    fgets(ticket->equipment, 50, stdin);
+    printf("%s", ticket->equipment);
+
+    printf("What is the condition of the equipment?(A-New, B-Hardly Used, C-Used, D-Awful state )\n");
+    char condition;
+    scanf(" %c", &condition);
+    ticket->condition = condition;
+
+    printf("What is the price of the equipment?\n");
+    int price;
+    scanf("%d", &price);
+    ticket->price = price;
+
+    getFormattedDateTime(timeString, sizeof(timeString) / sizeof(timeString[0]));
+    strcpy(ticket->dateCalled, timeString);
+
+}
+void attendR(struct TicketR *ticket, int counter, char *timeString){
+    ticket->counter = counter;
+
+    getFormattedDateTime(timeString, sizeof(timeString) / sizeof(timeString[0]));
+    strcpy(ticket->dateCalled, timeString);
+}
 //Main function that runs the program
 int main() {
     int userInput; // Variable to store the user input
@@ -131,10 +157,6 @@ int main() {
                                 printf("Invalid Option\n");
                             }
 
-                            // printing the first element of the array for testing
-                            printf("%d\n", ticketsR[0].ticketID);
-                            printf("%s\n", ticketsR[0].dateGenerated);
-                            printf("%d\n", ticketsE[0].ticketID);
                             enterC(); // Just a break to make the console look better
                             break;
                         case 0:
@@ -150,6 +172,7 @@ int main() {
 
             case 2:
                 printf("Employee Menu:\n");
+                char timeString[20]; // 20 bytes should be enough
                 while (1) {
                     int choice; // Variable to store the user choice
                     printf("1. Attend a ticket\n");
@@ -167,22 +190,55 @@ int main() {
                     switch (choice) {
                         case 1:
                             printf("Attend a ticket\n");
+                            int choice;
+                            printf("Which counter are you in?(1-4)\n");
+                            scanf("%d", &choice);
+                            if (choice==4){
+                                for (int i = 0; i < idEc; i++) {
+                                    attendE(&ticketsE[i], choice ,timeString);
+                                }
+                            }
+                            else{
+                                printf("Which type of ticket do you want to attend?(0-R,1-E)\n");
+                                int type;
+                                scanf("%d", &type);
+                                if (type==0){
+                                    for (int i = 0; i < idRc; i++) {
+                                        attendR(&ticketsR[i], choice ,timeString);
+                                    }
+                                }
+                                else if (type==1){
+                                    for (int i = 0; i < idEc; i++) {
+                                        attendE(&ticketsE[i], choice ,timeString);
+                                    }
+                                }
+                                else{
+                                    printf("Invalid Option\n");
+                                }
+                            }
                             break;
                         case 2:
                             printf("Display all tickets by date\n");
-                            for (int i = 0; i < atendnum; i++) {
+                            for (int i = 0; i < idRc; i++) {
                                 printf("Ticket Number:%d\n", ticketsR[i].ticektnumberA);
                                 printf("Ticket Generated Date%s\n", ticketsR[i].dateGenerated);
                             }
+                            for (int i = 0; i < idEc; i++) {
+                                printf("Ticket Number:%d\n", ticketsE[i].ticektnumberA);
+                                printf("Ticket Generated Date%s\n", ticketsE[i].dateGenerated);
+                            }
                             break;
                         case 3:
-                            printf("Edit a ticket\n");
+                            printf("Display quantity of attended tickets by date\n");
                             break;
                         case 4:
-                            printf("Delete a ticket\n");
+                            printf("Display average wait time between appointments by date\n");
                             break;
                         case 5:
-                            printf("Display all tickets\n");
+                            printf("Display the less and most productives counters by date\n");
+                            break;
+                        case 6:
+                            printf("Display revenue of delivered products by date\n");
                             break;
                         case 0:
                             // Set the variable to leave the outer loop

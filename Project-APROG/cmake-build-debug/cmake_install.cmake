@@ -1,4 +1,4 @@
-# Install script for directory: C:/Users/Vasco/Documents/GitHub/ISEP-APROG/Project-APROG
+# Install script for directory: C:/Users/T470s/Documents/GitHub/ISEP-APROG/Project-APROG
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -45,5 +45,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "C:/Users/Vasco/Documents/GitHub/ISEP-APROG/Project-APROG/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "C:/Users/T470s/Documents/GitHub/ISEP-APROG/Project-APROG/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
