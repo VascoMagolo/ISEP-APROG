@@ -2,6 +2,19 @@
 #include <string.h>
 #include <time.h>
 
+int parseDate(const char *dateString, struct tm *timeStruct) {
+    if (sscanf(dateString, "%d/%d/%d %d:%d",
+               &timeStruct->tm_mday, &timeStruct->tm_mon, &timeStruct->tm_year,
+               &timeStruct->tm_hour, &timeStruct->tm_min) != 5) {
+        return 0;  // Parsing failed
+    }
+
+    // Adjust struct members for tm_mon (0-based) and tm_year (1900-based)
+    timeStruct->tm_mon -= 1;
+    timeStruct->tm_year -= 1900;
+
+    return 1;  // Parsing successful
+}
 // Function to get the formatted date and time string
 void getFormattedDateTime(char *timeString, size_t size) {
     time_t currentTime;
@@ -151,6 +164,7 @@ void displayAllTickets(int idRc, int idEc) {
 
 // Function to display the quantity of tickets attended by date
 void displayAttendQuantityTicketsByDate(int idRc, int idEc) {
+    //This function is not working properly
     char date[20];
     printf("\nEnter the date to search (dd/mm/yyyy hh:mm): ");
     scanf("%s", date);
@@ -176,6 +190,104 @@ void displayAttendQuantityTicketsByDate(int idRc, int idEc) {
 
     printf("\nThe quantity of tickets attended on %s is %d.\n", date, count);
 }
+
+    //this function displays the average wait time between appointments
+    //it gets the attended date from all the tickets and calculates the median time between attendances
+    //it then displays the median time
+    void displayAverageWaitTime(int idRc, int idEc) {
+        // Create an array to store time differences
+        double timeDifferences[200];
+        int timeDifferencesCount = 0;
+
+        // Extract attended dates and calculate time differences for TicketR
+        for (int i = 0; i < idRc; i++) {
+            struct tm attendedTime;
+            struct tm generatedTime;
+
+            if (parseDate(ticketsR[i].dateCalled, &attendedTime) &&
+                parseDate(ticketsR[i].dateGenerated, &generatedTime)) {
+                double difference = difftime(mktime(&attendedTime), mktime(&generatedTime));
+                timeDifferences[timeDifferencesCount++] = difference;
+            }
+        }
+
+            // Extract attended dates and calculate time differences for TicketE
+            for (int i = 0; i < idEc; i++) {
+                struct tm attendedTime;
+                struct tm generatedTime;
+
+                if (parseDate(ticketsE[i].dateCalled, &attendedTime) &&
+                    parseDate(ticketsE[i].dateGenerated, &generatedTime)) {
+                    double difference = difftime(mktime(&attendedTime), mktime(&generatedTime));
+                    timeDifferences[timeDifferencesCount++] = difference;
+                }}
+
+                // Calculate the average time difference
+                if (timeDifferencesCount > 0) {
+                    double totalDifference = 0.0;
+                    for (int i = 0; i < timeDifferencesCount; i++) {
+                        totalDifference += timeDifferences[i];
+                    }
+
+                    double average = totalDifference / timeDifferencesCount;
+
+                    printf("\nThe average wait time between all appointments is %.2f seconds.\n", average);
+                } else {
+                    printf("\nNo tickets attended.\n");
+                }
+            }
+
+    void countcounter(int idRc, int idEc){
+
+        int C1 = 0, C2 = 0, C3 = 0, C4 = 0;
+        for (int i = 0; i < idRc; i++) {
+            if (ticketsR[i].counter == 1) {
+                C1++;
+            } else if (ticketsR[i].counter == 2) {
+                C2++;
+            } else if (ticketsR[i].counter == 3) {
+                C3++;
+            } else if (ticketsR[i].counter == 4) {
+                C4++;
+            }
+        }
+
+        for (int i = 0; i < idEc; i++) {
+            if (ticketsE[i].counter == 1) {
+                C1++;
+            } else if (ticketsE[i].counter == 2) {
+                C2++;
+            } else if (ticketsE[i].counter == 3) {
+                C3++;
+            } else if (ticketsE[i].counter == 4) {
+                C4++;
+            }
+        }
+        printf("The most productive counter is: ");
+        if (C1 > C2 && C1 > C3 && C1 > C4) {
+            printf("Counter 1\n");
+        } else if (C2 > C1 && C2 > C3 && C2 > C4) {
+            printf("Counter 2\n");
+        } else if (C3 > C1 && C3 > C2 && C3 > C4) {
+            printf("Counter 3\n");
+        } else if (C4 > C1 && C4 > C2 && C4 > C3) {
+            printf("Counter 4\n");
+        } else {
+            printf("There is no most productive counter\n");
+        }
+        printf("The less productive counter is: ");
+        if (C1 < C2 && C1 < C3 && C1 < C4) {
+            printf("Counter 1\n");
+        } else if (C2 < C1 && C2 < C3 && C2 < C4) {
+            printf("Counter 2\n");
+        } else if (C3 < C1 && C3 < C2 && C3 < C4) {
+            printf("Counter 3\n");
+        } else if (C4 < C1 && C4 < C2 && C4 < C3) {
+            printf("Counter 4\n");
+        } else {
+            printf("There is no less productive counter\n");
+        }
+    }
 
 // Main function that runs the program
 int main() {
@@ -262,7 +374,6 @@ int main() {
                             int counter;
                             printf("Which counter are you in? (1-4)\n");
                             scanf("%d", &counter);
-
                             if (counter < 1 || counter > 4) {
                                 printf("Invalid counter. Please choose a counter between 1 and 4.\n");
                                 break;
@@ -270,7 +381,10 @@ int main() {
 
                             if (counter == 4) {
                                 for (int i = 0; i < idEc; i++) {
-                                    attendE(&ticketsE[i], counter, timeString);
+                                    if (ticketsE[i].counter == 0) {
+                                        attendE(&ticketsE[i], counter, timeString);
+                                        break;
+                                    }
                                 }
                             } else {
                                 printf("Which type of ticket do you want to attend? (0-R, 1-E)\n");
@@ -279,11 +393,17 @@ int main() {
 
                                 if (type == 0) {
                                     for (int i = 0; i < idRc; i++) {
-                                        attendR(&ticketsR[i], counter, timeString);
+                                        if (ticketsR[i].counter == 0) {
+                                            attendR(&ticketsR[i], counter, timeString);
+                                            break;
+                                        }
                                     }
                                 } else if (type == 1) {
                                     for (int i = 0; i < idEc; i++) {
-                                        attendE(&ticketsE[i], counter, timeString);
+                                        if (ticketsE[i].counter == 0){
+                                            attendE(&ticketsE[i], counter, timeString);
+                                            break;
+                                        }
                                     }
                                 } else {
                                     printf("Invalid Option\n");
@@ -300,9 +420,11 @@ int main() {
                             break;
                         case 4:
                             printf("\nDisplay average wait time between appointments by date\n");
+                            displayAverageWaitTime(idRc, idEc);
                             break;
                         case 5:
                             printf("\nDisplay the less and most productive counters by date\n");
+                            countcounter(idRc, idEc);
                             break;
                         case 6:
                             printf("\nDisplay revenue of delivered products by date\n");
