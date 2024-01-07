@@ -83,7 +83,7 @@ struct TicketR {
     char mainFault[50];
     char observation[50];
 };
-struct TicketE {
+struct TicketD {
     int ticketID;
     int ticketNumberA;
     char dateGenerated[20];
@@ -97,7 +97,7 @@ struct TicketE {
 
 // Declaring array of structures
 struct TicketR ticketsR[100];
-struct TicketE ticketsE[100];
+struct TicketD ticketsD[100];
 
 
 // Structs Functions Begin
@@ -110,10 +110,10 @@ struct TicketR fR(char *timestamp, int idRc, int atendnum) {
     strcpy(ticket.dateGenerated, timestamp);
     return ticket;
 }
-// Function to create a TicketE structure
-struct TicketE fE(char *timestamp, int idEc, int atendnum) {
-    struct TicketE ticket;
-    ticket.ticketID = idEc;
+// Function to create a TicketD structure
+struct TicketD fD(char *timestamp, int idDc, int atendnum) {
+    struct TicketD ticket;
+    ticket.ticketID = idDc;
     ticket.ticketNumberA = atendnum;
     strcpy(ticket.dateGenerated, timestamp);
     return ticket;
@@ -124,17 +124,17 @@ struct TicketE fE(char *timestamp, int idEc, int atendnum) {
 // Function to add TicketR to the array
 void addtoarrR(char *timeString, int idRc, int counter, int atendnum) {
     ticketsR[counter] = fR(timeString, idRc, atendnum);
-    printf("Ticket R%d created and added to the array.\n", ticketsR[counter].ticketNumberA);
+    printf("Repair Ticket Number:%d created and added to the array.\n", ticketsR[counter].ticketID);
 }
-// Function to add TicketE to the array
-void addtoarrE(char *timeString, int idEc, int counter, int atendnum) {
-    ticketsE[counter] = fE(timeString, idEc, atendnum);
-    printf("Ticket E%d created and added to the array.\n", ticketsE[counter].ticketNumberA);
+// Function to add TicketD to the array
+void addtoarrD(char *timeString, int idDc, int counter, int atendnum) {
+    ticketsD[counter] = fD(timeString, idDc, atendnum);
+    printf("Delivery/Return Ticket Number:%d created and added to the array.\n", ticketsD[counter].ticketID);
 }
 // Functions to add the ticket to the array - END
 
-// Function for employee to attend a TicketE
-void attendE(struct TicketE *ticket, int counter, char *timeString) {
+// Function for employee to attend a TicketD
+void attendD(struct TicketD *ticket, int counter, char *timeString) {
     ticket->counter = counter;
 
     printf("What is the equipment? ");
@@ -158,7 +158,7 @@ void attendE(struct TicketE *ticket, int counter, char *timeString) {
     getFormattedDateTime(timeString, sizeof(ticket->dateCalled));
     strcpy(ticket->dateCalled, timeString);
 
-    printf("Ticket E%d attended and updated.\n", ticket->ticketNumberA);
+    printf("Ticket D%d attended and updated.\n", ticket->ticketNumberA);
 }
 // Function for employee to attend a TicketR
 void attendR(struct TicketR *ticket, int counter, char *timeString) {
@@ -183,7 +183,7 @@ void attendR(struct TicketR *ticket, int counter, char *timeString) {
 }
 
 // Function to display all tickets
-void displayAllTickets(int idRc, int idEc) {
+void displayAllTickets(int idRc, int idDc) {
     printf("\nAll Tickets:\n");
 
     for (int i = 0; i < idRc; i++) {
@@ -197,19 +197,19 @@ void displayAllTickets(int idRc, int idEc) {
         printf("------------------------\n");
     }
 
-    for (int i = 0; i < idEc; i++) {
-        printf("Ticket E%d\n", ticketsE[i].ticketNumberA);
-        printf("Generated Date: %s\n", ticketsE[i].dateGenerated);
-        printf("Called Date: %s\n", ticketsE[i].dateCalled);
-        printf("Counter: %d\n", ticketsE[i].counter);
-        printf("Equipment: %s\n", ticketsE[i].equipment);
-        printf("Condition: %c\n", ticketsE[i].condition);
-        printf("Price: %d\n", ticketsE[i].price);
+    for (int i = 0; i < idDc; i++) {
+        printf("Ticket E%d\n", ticketsD[i].ticketNumberA);
+        printf("Generated Date: %s\n", ticketsD[i].dateGenerated);
+        printf("Called Date: %s\n", ticketsD[i].dateCalled);
+        printf("Counter: %d\n", ticketsD[i].counter);
+        printf("Equipment: %s\n", ticketsD[i].equipment);
+        printf("Condition: %c\n", ticketsD[i].condition);
+        printf("Price: %d\n", ticketsD[i].price);
         printf("------------------------\n");
     }
 }
 // Function to display the quantity of tickets attended by date
-void displayAttendQuantityTicketsByDate(int idRc, int idEc) {
+void displayAttendQuantityTicketsByDate(int idRc, int idDc) {
     // Variables to store the date for searching
     char date[20];
     printf("Enter the date for which you want to display average wait time (dd/mm/yyyy): ");
@@ -228,15 +228,15 @@ void displayAttendQuantityTicketsByDate(int idRc, int idEc) {
         }
     }
 
-    for (int i = 0; i < idEc; i++) {
-        if (strstr(ticketsE[i].dateCalled, date) != NULL) {// strstr() is used to check if the date entered is the same as the date called, it searches the date entered on the date called
+    for (int i = 0; i < idDc; i++) {
+        if (strstr(ticketsD[i].dateCalled, date) != NULL) {// strstr() is used to check if the date entered is the same as the date called, it searches the date entered on the date called
             count++;
         }
     }
 
     printf("\nThe quantity of tickets attended on %s is %d.\n", date, count);
 }
-void displayAverageWaitTimeByDate(int idRc, int idEc) {
+void displayAverageWaitTimeByDate(int idRc, int idDc) {
     // Variables to store the date for searching
     char date[20];
     printf("Enter the date for which you want to display average wait time (dd/mm/yyyy): ");
@@ -266,14 +266,14 @@ void displayAverageWaitTimeByDate(int idRc, int idEc) {
         }
     }
 
-    // Extract attended dates and calculate time differences for TicketE
-    for (int i = 0; i < idEc; i++) {
-        if (strstr(ticketsE[i].dateCalled, date) != NULL) {// strstr() is used to check if the date entered is the same as the date called, it searches the date entered on the date called
+    // Extract attended dates and calculate time differences for TicketD
+    for (int i = 0; i < idDc; i++) {
+        if (strstr(ticketsD[i].dateCalled, date) != NULL) {// strstr() is used to check if the date entered is the same as the date called, it searches the date entered on the date called
             struct tm attendedTime;
             struct tm generatedTime;
 
-            if (parseDate(ticketsE[i].dateCalled, &attendedTime) &&
-                parseDate(ticketsE[i].dateGenerated, &generatedTime)) {
+            if (parseDate(ticketsD[i].dateCalled, &attendedTime) &&
+                parseDate(ticketsD[i].dateGenerated, &generatedTime)) {
                 double difference = difftime(mktime(&attendedTime), mktime(&generatedTime));
                 timeDifferences[timeDifferencesCount++] = difference;
             }
@@ -288,13 +288,17 @@ void displayAverageWaitTimeByDate(int idRc, int idEc) {
         }
 
         double average = totalDifference / timeDifferencesCount;
+        // Convert the average from seconds to hours, minutes, and seconds
+        int hours = (int)(average / 3600);
+        int minutes = (int)((average - hours * 3600) / 60);
+        int seconds = (int)(average - hours * 3600 - minutes * 60);
 
-        printf("\nThe average wait time between appointments on %s is %.2f seconds.\n", date, average);
+        printf("\nThe average wait time between appointments on %s is %02d hour/s, %02d minute/s, %02d second/s\n", date, hours, minutes, seconds);
     } else {
         printf("\nNo tickets attended on %s.\n", date);
     }
 }
-void countCounterbyDate(int idRc, int idEc) {
+void countCounterbyDate(int idRc, int idDc) {
     int C1 = 0, C2 = 0, C3 = 0, C4 = 0;
 
     // Variables to store the date for searching
@@ -323,15 +327,15 @@ void countCounterbyDate(int idRc, int idEc) {
         }
     }
 
-    for (int i = 0; i < idEc; i++) {
-        if (strstr(ticketsE[i].dateCalled, date) != NULL) {// strstr() is used to check if the date entered is the same as the date called, it searches the date entered on the date called
-            if (ticketsE[i].counter == 1) {
+    for (int i = 0; i < idDc; i++) {
+        if (strstr(ticketsD[i].dateCalled, date) != NULL) {// strstr() is used to check if the date entered is the same as the date called, it searches the date entered on the date called
+            if (ticketsD[i].counter == 1) {
                 C1++;
-            } else if (ticketsE[i].counter == 2) {
+            } else if (ticketsD[i].counter == 2) {
                 C2++;
-            } else if (ticketsE[i].counter == 3) {
+            } else if (ticketsD[i].counter == 3) {
                 C3++;
-            } else if (ticketsE[i].counter == 4) {
+            } else if (ticketsD[i].counter == 4) {
                 C4++;
             }
         }
@@ -365,7 +369,7 @@ void countCounterbyDate(int idRc, int idEc) {
         printf("There is no least productive counter\n");
     }
 }
-void displayrevenuebydate(int idEc) {
+void displayrevenuebydate(int idDc) {
     char date[20];
     printf("Enter the date for which you want to calculate revenue (dd/mm/yyyy): ");
     scanf("%s", date);
@@ -378,10 +382,10 @@ void displayrevenuebydate(int idEc) {
 
 
     double totalRevenue = 0.0;
-    // Calculate the revenue for each ticketE delivered on the entered date
-    for (int i = 0; i < idEc; i++) {
-        if (strstr(ticketsE[i].dateCalled, date) != NULL) {// strstr() is used to check if the date entered is the same as the date called, it searches the date entered on the date called
-            totalRevenue += ticketsE[i].price;
+    // Calculate the revenue for each ticketD delivered on the entered date
+    for (int i = 0; i < idDc; i++) {
+        if (strstr(ticketsD[i].dateCalled, date) != NULL) {// strstr() is used to check if the date entered is the same as the date called, it searches the date entered on the date called
+            totalRevenue += ticketsD[i].price;
         }
     }
 
@@ -391,7 +395,7 @@ void displayrevenuebydate(int idEc) {
 // Main function that runs the program
 int main() {
     int userInput;
-    int t, idRc = 0, idEc = 0, atendnum = 0;
+    int t, idRc = 0, idDc = 0, atendnum = 0;
     int leaveProgram = 0;
 
     while (!leaveProgram) {// Main loop to keep the program running until the user chooses to leave
@@ -432,9 +436,9 @@ int main() {
                                     atendnum++;
                                     idRc++;
                                 } else if (t == 1) {
-                                    addtoarrE(timeString, idEc, idEc, atendnum);
+                                    addtoarrD(timeString, idDc, idDc, atendnum);
                                     atendnum++;
-                                    idEc++;
+                                    idDc++;
                                 } else {
                                     printf("Invalid Option\n");
                                 }
@@ -485,14 +489,14 @@ int main() {
                             }
 
                             if (counter == 4) {
-                                for (int i = 0; i < idEc; i++) {
-                                    if (ticketsE[i].counter == 0) {
-                                        attendE(&ticketsE[i], counter, timeString);
+                                for (int i = 0; i < idDc; i++) {
+                                    if (ticketsD[i].counter == 0) {
+                                        attendD(&ticketsD[i], counter, timeString);
                                         break;
                                     }
                                 }
                             } else {
-                                printf("Which type of ticket do you want to attend? (0-Repair, 1-E)\n");
+                                printf("Which type of ticket do you want to attend? (0-Repair, 1-Delivery)\n");
                                 int type;
                                 scanf("%d", &type);
 
@@ -504,9 +508,9 @@ int main() {
                                         }
                                     }
                                 } else if (type == 1) {
-                                    for (int i = 0; i < idEc; i++) {
-                                        if (ticketsE[i].counter == 0){
-                                            attendE(&ticketsE[i], counter, timeString);
+                                    for (int i = 0; i < idDc; i++) {
+                                        if (ticketsD[i].counter == 0){
+                                            attendD(&ticketsD[i], counter, timeString);
                                             break;
                                         }
                                     }
@@ -517,23 +521,23 @@ int main() {
                             break;
                         case 2:
                             printf("\nDisplay all tickets\n");
-                            displayAllTickets(idRc, idEc);
+                            displayAllTickets(idRc, idDc);
                             break;
                         case 3:
                             printf("\nDisplay quantity of tickets attended by date\n");
-                            displayAttendQuantityTicketsByDate(idRc, idEc);
+                            displayAttendQuantityTicketsByDate(idRc, idDc);
                             break;
                         case 4:
                             printf("\nDisplay average wait time between appointments by date\n");
-                            displayAverageWaitTimeByDate(idRc, idEc);
+                            displayAverageWaitTimeByDate(idRc, idDc);
                             break;
                         case 5:
                             printf("\nDisplay the less and most productive counters by date\n");
-                            countCounterbyDate(idRc, idEc);
+                            countCounterbyDate(idRc, idDc);
                             break;
                         case 6:
                             printf("\nDisplay revenue of delivered products by date\n");
-                            displayrevenuebydate(idEc);
+                            displayrevenuebydate(idDc);
                             break;
                         case 0:
                             // Set the variable to leave the outer loop
