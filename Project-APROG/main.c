@@ -158,7 +158,7 @@ void attendD(struct TicketD *ticket, int counter, char *timeString) {
     getFormattedDateTime(timeString, sizeof(ticket->dateCalled));
     strcpy(ticket->dateCalled, timeString);
 
-    printf("Ticket D%d attended and updated.\n", ticket->ticketNumberA);
+    printf("Delivery Ticket Number:%d attended and updated.\n", ticket->ticketNumberA);
 }
 // Function for employee to attend a TicketR
 void attendR(struct TicketR *ticket, int counter, char *timeString) {
@@ -179,7 +179,7 @@ void attendR(struct TicketR *ticket, int counter, char *timeString) {
     scanf("%s", ticket->observation);
     getchar();
 
-    printf("Ticket R%d attended and updated.\n", ticket->ticketNumberA);
+    printf("Repair Ticket Number:%d attended and updated.\n", ticket->ticketNumberA);
 }
 
 // Function to display all tickets
@@ -187,7 +187,7 @@ void displayAllTickets(int idRc, int idDc) {
     printf("\nAll Tickets:\n");
 
     for (int i = 0; i < idRc; i++) {
-        printf("Ticket R%d\n", ticketsR[i].ticketNumberA);
+        printf("Repair Ticket Number:%d\n", ticketsR[i].ticketID);
         printf("Generated Date: %s\n", ticketsR[i].dateGenerated);
         printf("Called Date: %s\n", ticketsR[i].dateCalled);
         printf("Counter: %d\n", ticketsR[i].counter);
@@ -198,7 +198,7 @@ void displayAllTickets(int idRc, int idDc) {
     }
 
     for (int i = 0; i < idDc; i++) {
-        printf("Ticket E%d\n", ticketsD[i].ticketNumberA);
+        printf("Delivery Ticket Number:%d\n", ticketsD[i].ticketID);
         printf("Generated Date: %s\n", ticketsD[i].dateGenerated);
         printf("Called Date: %s\n", ticketsD[i].dateCalled);
         printf("Counter: %d\n", ticketsD[i].counter);
@@ -249,7 +249,7 @@ void displayAverageWaitTimeByDate(int idRc, int idDc) {
     }
 
     // Create an array to store time differences
-    double timeDifferences[200];
+    double timeDifference[200];
     int timeDifferencesCount = 0;
 
     // Extract attended dates and calculate time differences for TicketR
@@ -261,7 +261,7 @@ void displayAverageWaitTimeByDate(int idRc, int idDc) {
             if (parseDate(ticketsR[i].dateCalled, &attendedTime) &&
                 parseDate(ticketsR[i].dateGenerated, &generatedTime)) {
                 double difference = difftime(mktime(&attendedTime), mktime(&generatedTime));
-                timeDifferences[timeDifferencesCount++] = difference;
+                timeDifference[timeDifferencesCount++] = difference;
             }
         }
     }
@@ -275,7 +275,7 @@ void displayAverageWaitTimeByDate(int idRc, int idDc) {
             if (parseDate(ticketsD[i].dateCalled, &attendedTime) &&
                 parseDate(ticketsD[i].dateGenerated, &generatedTime)) {
                 double difference = difftime(mktime(&attendedTime), mktime(&generatedTime));
-                timeDifferences[timeDifferencesCount++] = difference;
+                timeDifference[timeDifferencesCount++] = difference;
             }
         }
     }
@@ -284,7 +284,7 @@ void displayAverageWaitTimeByDate(int idRc, int idDc) {
     if (timeDifferencesCount > 0) {
         double totalDifference = 0.0;
         for (int i = 0; i < timeDifferencesCount; i++) {
-            totalDifference += timeDifferences[i];
+            totalDifference += timeDifference[i];
         }
 
         double average = totalDifference / timeDifferencesCount;
@@ -428,7 +428,7 @@ int main() {
                                 printf("\nCreate a ticket\n");
                                 char timeString[20];
                                 getFormattedDateTime(timeString, sizeof(timeString));
-                                printf("Which ticket do you want? (0-R, 1-E)\n");
+                                printf("Which ticket do you want? (0-Repair, 1-Delivery)\n");
                                 scanf("%d", &t);
 
                                 if (t == 0) {
@@ -444,7 +444,7 @@ int main() {
                                 }
                             }
                             else {
-                                printf("\nTickets can only be generated between 8 am and 10 pm.\n");
+                                printf("\nTickets can only be generated between 8:00 am and 9:59 pm.\n");
                             }
                             enterC();
                             break;
