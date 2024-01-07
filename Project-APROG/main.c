@@ -1,8 +1,62 @@
+/*
+ * This is a program made for the final group project of the class APROG (Algorithms and Programming) of the 1st year of the degree in Electrical and Computer Engineering at ISEP.
+ * This represents a ticket system for a company that repairs, returns and delivers electronic equipment.
+ *
+ */
+
+// Libraries
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
 
+// Function to pause the console until 'C' is pressed
+int enterC() {
+    printf("\nPress 'C' to Continue...\n");
+    while (getchar() != 'C');
+    return 0;
+}
+
+// Time Functions Begin
+
+// Function to get the formatted date and time string
+void getFormattedDateTime(char *timeString, size_t size) {
+    time_t currentTime;
+    struct tm *localTime; //Struct from the time.h library
+
+    // Get the current time
+    time(&currentTime);
+    localTime = localtime(&currentTime);
+
+    // Format date and time and store in the buffer
+    strftime(timeString, size, "%d/%m/%Y %H:%M", localTime);
+}
+
+// Function to check if the current time is within the allowed working hours
+int isWithinTimeRange() {
+    time_t currentTime;
+    struct tm *localTime; //Struct from the time.h library
+
+    // Getting the current time
+    time(&currentTime);
+    localTime = localtime(&currentTime);
+
+    // Extracting hours and minutes
+    int hours = localTime->tm_hour;
+    int minutes = localTime->tm_min;
+
+    // Condtion to check if the current time is between 8:00 am and 9:59 pm
+    if ((hours > 8 || (hours == 8 && minutes >= 0)) && (hours < 21 || (hours == 21 & minutes <= 59))) {
+        return 1;  // In the time range
+    }
+    else {
+        return 0;  // Not in the time range
+    }
+}
+
+// Function to parse a date string into a struct tm
+// This as the purpose of passing a string int a format that can be used to compare dates
 int parseDate(const char *dateString, struct tm *timeStruct) {
+    //using sscanf to pass the dateString(string) to the timeStruct(int)
     if (sscanf(dateString, "%d/%d/%d %d:%d",
                &timeStruct->tm_mday, &timeStruct->tm_mon, &timeStruct->tm_year,
                &timeStruct->tm_hour, &timeStruct->tm_min) != 5) {
@@ -15,47 +69,8 @@ int parseDate(const char *dateString, struct tm *timeStruct) {
 
     return 1;  // Parsing successful
 }
-// Function to get the formatted date and time string
-void getFormattedDateTime(char *timeString, size_t size) {
-    time_t currentTime;
-    struct tm *localTime;
 
-    // Get the current time
-    time(&currentTime);
-    localTime = localtime(&currentTime);
-
-    // Format date and time and store in the buffer
-    strftime(timeString, size, "%d/%m/%Y %H:%M", localTime);
-}
-
-// Function to check if the current time is between 8 am and 9 pm
-int isWithinTimeRange() {
-    time_t currentTime;
-    struct tm *localTime;
-
-    // Get the current time
-    time(&currentTime);
-    localTime = localtime(&currentTime);
-
-    // Extract hours and minutes
-    int hours = localTime->tm_hour;
-    int minutes = localTime->tm_min;
-
-    // Check if the current time is between 8 am and 9 pm
-    if ((hours > 8 || (hours == 8 && minutes >= 0)) && (hours < 21 || (hours == 21 & minutes <= 59))) {
-        return 1;  // Within the time range
-    }
-    else {
-        return 0;  // Outside the time range
-    }
-}
-
-// Function to pause the console until 'C' is pressed
-int enterC() {
-    printf("\nPress 'C' to Continue...\n");
-    while (getchar() != 'C');
-    return 0;
-}
+// Time Functions End
 
 // Structs Begin
 struct TicketR {
@@ -83,6 +98,7 @@ struct TicketE {
 // Declaring array of structures
 struct TicketR ticketsR[100];
 struct TicketE ticketsE[100];
+
 
 // Structs Functions Begin
 
@@ -123,24 +139,27 @@ void attendE(struct TicketE *ticket, int counter, char *timeString) {
 
     printf("What is the equipment? ");
     scanf("%s", ticket->equipment);
+    getchar();
 
     printf("What is the condition of the equipment? (A-New, B-Hardly Used, C-Used, D-Awful state)\n");
     scanf(" %c", &ticket->condition);
+    getchar();
 
     printf("What is the price to pay? ");
     int price;
     scanf("%d", &price);
-    if (price < 0) {// Validates the price
+    if (price < 0) {// Validates if the input value is bigger than zero
         printf("Invalid price. Please enter a positive value.\n");
         return;
     }
     ticket->price = price;
+    getchar();
+
     getFormattedDateTime(timeString, sizeof(ticket->dateCalled));
     strcpy(ticket->dateCalled, timeString);
 
     printf("Ticket E%d attended and updated.\n", ticket->ticketNumberA);
 }
-
 // Function for employee to attend a TicketR
 void attendR(struct TicketR *ticket, int counter, char *timeString) {
     ticket->counter = counter;
@@ -150,12 +169,15 @@ void attendR(struct TicketR *ticket, int counter, char *timeString) {
 
     printf("What is the equipment? ");
     scanf("%s", ticket->equipment);
+    getchar();
 
     printf("What is the main fault? ");
     scanf("%s", ticket->mainFault);
+    getchar();
 
     printf("What is the observation? ");
     scanf("%s", ticket->observation);
+    getchar();
 
     printf("Ticket R%d attended and updated.\n", ticket->ticketNumberA);
 }
@@ -201,13 +223,13 @@ void displayAttendQuantityTicketsByDate(int idRc, int idEc) {
 
     int count = 0;
     for (int i = 0; i < idRc; i++) {
-        if (strstr(ticketsR[i].dateCalled, date) != NULL) {
+        if (strstr(ticketsR[i].dateCalled, date) != NULL) {// strstr() is used to check if the date entered is the same as the date called, it searches the date entered on the date called
             count++;
         }
     }
 
     for (int i = 0; i < idEc; i++) {
-        if (strstr(ticketsE[i].dateCalled, date) != NULL) {
+        if (strstr(ticketsE[i].dateCalled, date) != NULL) {// strstr() is used to check if the date entered is the same as the date called, it searches the date entered on the date called
             count++;
         }
     }
@@ -232,7 +254,7 @@ void displayAverageWaitTimeByDate(int idRc, int idEc) {
 
     // Extract attended dates and calculate time differences for TicketR
     for (int i = 0; i < idRc; i++) {
-        if (strstr(ticketsR[i].dateCalled, date) != NULL) {
+        if (strstr(ticketsR[i].dateCalled, date) != NULL) {// strstr() is used to check if the date entered is the same as the date called, it searches the date entered on the date called
             struct tm attendedTime;
             struct tm generatedTime;
 
@@ -246,7 +268,7 @@ void displayAverageWaitTimeByDate(int idRc, int idEc) {
 
     // Extract attended dates and calculate time differences for TicketE
     for (int i = 0; i < idEc; i++) {
-        if (strstr(ticketsE[i].dateCalled, date) != NULL) {
+        if (strstr(ticketsE[i].dateCalled, date) != NULL) {// strstr() is used to check if the date entered is the same as the date called, it searches the date entered on the date called
             struct tm attendedTime;
             struct tm generatedTime;
 
@@ -288,7 +310,7 @@ void countCounterbyDate(int idRc, int idEc) {
 
     // Count tickets for each counter based on the entered date
     for (int i = 0; i < idRc; i++) {
-        if (strstr(ticketsR[i].dateCalled, date) != NULL) {
+        if (strstr(ticketsR[i].dateCalled, date) != NULL) {// strstr() is used to check if the date entered is the same as the date called, it searches the date entered on the date called
             if (ticketsR[i].counter == 1) {
                 C1++;
             } else if (ticketsR[i].counter == 2) {
@@ -302,7 +324,7 @@ void countCounterbyDate(int idRc, int idEc) {
     }
 
     for (int i = 0; i < idEc; i++) {
-        if (strstr(ticketsE[i].dateCalled, date) != NULL) {
+        if (strstr(ticketsE[i].dateCalled, date) != NULL) {// strstr() is used to check if the date entered is the same as the date called, it searches the date entered on the date called
             if (ticketsE[i].counter == 1) {
                 C1++;
             } else if (ticketsE[i].counter == 2) {
@@ -348,17 +370,17 @@ void displayrevenuebydate(int idEc) {
     printf("Enter the date for which you want to calculate revenue (dd/mm/yyyy): ");
     scanf("%s", date);
 
-    // Validate the date format (you may want to enhance this validation)
+    // Validate the date format, basically checking if the string has 10 characters and if the 3rd and 6th characters are '/'
     if (strlen(date) != 10 || date[2] != '/' || date[5] != '/') {
         printf("Invalid date format. Please use dd/mm/yyyy.\n");
         return;
     }
 
-    // Calculate revenue for delivered products on the specified date
-    double totalRevenue = 0.0;
 
+    double totalRevenue = 0.0;
+    // Calculate the revenue for each ticketE delivered on the entered date
     for (int i = 0; i < idEc; i++) {
-        if (strstr(ticketsE[i].dateCalled, date) != NULL) {
+        if (strstr(ticketsE[i].dateCalled, date) != NULL) {// strstr() is used to check if the date entered is the same as the date called, it searches the date entered on the date called
             totalRevenue += ticketsE[i].price;
         }
     }
@@ -372,7 +394,7 @@ int main() {
     int t, idRc = 0, idEc = 0, atendnum = 0;
     int leaveProgram = 0;
 
-    while (!leaveProgram) {
+    while (!leaveProgram) {// Main loop to keep the program running until the user chooses to leave
         printf("\nMenu:\n");
         printf("1. Customer\n");
         printf("2. Employee\n");
