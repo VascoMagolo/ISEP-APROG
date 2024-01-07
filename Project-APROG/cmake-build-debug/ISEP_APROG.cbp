@@ -76,6 +76,9 @@
 				</MakeCommands>
 			</Target>
 		</Build>
+		<Unit filename="C:/Users/T470s/Documents/GitHub/ISEP-APROG/Project-APROG/functions.h">
+			<Option target="ISEP_APROG"/>
+		</Unit>
 		<Unit filename="C:/Users/T470s/Documents/GitHub/ISEP-APROG/Project-APROG/main.c">
 			<Option target="ISEP_APROG"/>
 		</Unit>
