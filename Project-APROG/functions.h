@@ -3,10 +3,6 @@
 #include <string.h>
 #include <time.h>
 
-// Constants
-const int MAX_TICKETS = 1000; // Maximum number of tickets
-const int MAX_COUNTERS = 4; // Maximum number of counters
-
 // Function to pause the console until 'C' is pressed
 int EnterC() {
     printf("\nPress 'C' to Continue...\n");
@@ -94,8 +90,8 @@ struct TicketD {
 // Structs End
 
 // Declaring array of structures
-struct TicketR ticketsR[MAX_TICKETS];
-struct TicketD ticketsD[MAX_TICKETS];
+struct TicketR ticketsR[100];
+struct TicketD ticketsD[100];
 
 
 // Structs Functions Begin
@@ -297,7 +293,7 @@ void DisplayAverageWaitTimeByDate(int idRc, int idDc) {
     }
 }
 void CountCounterByDate(int idRc, int idDc) {
-    int counters[MAX_COUNTERS] = {0};  // Array to store the count for each counter
+    int counters[4] = {0};  // Array to store the count for each counter
 
     // Variables to store the date for searching
     char date[20];

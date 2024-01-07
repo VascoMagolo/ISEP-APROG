@@ -99,7 +99,7 @@ int main() {
                         case 1:
                             printf("\nAttend a ticket\n");
                             int counter;
-                            printf("Which counter are you in? (1-%d)\n", MAX_COUNTERS);
+                            printf("Which counter are you in? (1-4)\n");
                             scanf("%d", &counter);
                             if (counter < 1 || counter > 4) {
                                 printf("Invalid counter. Please choose a counter between 1 and 4.\n");
