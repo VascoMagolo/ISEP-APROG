@@ -406,10 +406,10 @@ int main() {
 
         scanf("%d", &userInput);
 
-        switch (userInput) {
+        switch (userInput) {//Switch case for the user to choose between the customer menu, employee menu or leave the program
             case 1:
                 printf("\nCustomer Menu:\n");
-                while (1) {
+                while (1) { // Loop to keep the customer menu running until the user chooses to leave
                     int choice;
                     printf("\nMenu:\n");
                     printf("1. Create a ticket\n");
@@ -420,7 +420,7 @@ int main() {
                         break;
                     }
 
-                    switch (choice) {
+                    switch (choice) { //Switch case for the user to choose between creating a ticket or leaving the menu
                         case 1:
 
                             // Check if the current time is within the allowed range
@@ -461,7 +461,7 @@ int main() {
             case 2:
                 printf("\nEmployee Menu:\n");
                 char timeString[20];
-                while (1) {
+                while (1) { // Loop to keep the employee menu running until the user chooses to leave
                     int choice;
                     printf("\nMenu:\n");
                     printf("1. Attend a ticket\n");
@@ -477,7 +477,7 @@ int main() {
                         break;
                     }
 
-                    switch (choice) {
+                    switch (choice) { //Switch case for the user to choose between attending a ticket, displaying all tickets, displaying quantity of attended tickets by date, displaying average wait time between appointments by date, displaying the less and most productive counters by date, displaying revenue of delivered products by date or leaving the menu
                         case 1:
                             printf("\nAttend a ticket\n");
                             int counter;
